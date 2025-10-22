@@ -18,7 +18,7 @@ class Config:
         
         # Debug
         self.debug_mode = True
-        self.show_hitboxes = False
+        self.show_hitboxes = True  # ← ADICIONE ESTA LINHA
         
     def load(self):
         """Carrega configurações de arquivo (implementar depois)"""
