@@ -1,0 +1,133 @@
+plane_free/
+│
+├── main.py                      # Entry point
+├── config.py                    # Configurações globais
+├── constants.py                 # Constantes (cores, tamanhos, etc)
+├── requirements.txt             # Dependências Python
+│
+├── assets/                      # Todos os assets do jogo
+│   ├── sprites/
+│   │   ├── ships/              # Naves (player e inimigos)
+│   │   ├── projectiles/        # Projéteis
+│   │   ├── effects/            # Explosões, partículas
+│   │   ├── ui/                 # Elementos de interface
+│   │   ├── cards/              # Ícones de cartas
+│   │   └── backgrounds/        # Layers de fundo
+│   │
+│   ├── sounds/
+│   │   ├── music/              # Trilhas musicais (.ogg)
+│   │   └── sfx/                # Efeitos sonoros (.wav)
+│   │
+│   └── fonts/                  # Fontes (.ttf)
+│
+├── src/                        # Código fonte
+│   ├── core/                   # Sistemas core
+│   │   ├── game.py            # Loop principal
+│   │   ├── state_manager.py   # Gerenciador de estados
+│   │   ├── resource_manager.py # Carregador de assets
+│   │   ├── input_manager.py   # Input handling
+│   │   └── save_system.py     # Sistema de save/load
+│   │
+│   ├── entities/              # Entidades do jogo
+│   │   ├── player.py          # Classe Player
+│   │   ├── enemy.py           # Classe Enemy (base)
+│   │   ├── boss.py            # Classe Boss
+│   │   ├── projectile.py      # Projéteis
+│   │   └── collectible.py     # Minérios, cartas
+│   │
+│   ├── systems/               # Sistemas de gameplay
+│   │   ├── collision.py       # Detecção de colisão
+│   │   ├── spawn_manager.py   # Spawn de inimigos
+│   │   ├── wave_manager.py    # Gerenciador de waves/setores
+│   │   ├── card_system.py     # Sistema de cartas
+│   │   ├── combo_system.py    # Sistema de combo
+│   │   ├── mutation_system.py # Sistema de mutação
+│   │   └── achievement.py     # Sistema de conquistas
+│   │
+│   ├── ui/                    # Interfaces
+│   │   ├── hud.py            # HUD durante jogo
+│   │   ├── menu.py           # Menu principal
+│   │   ├── pause_menu.py     # Menu de pausa
+│   │   ├── game_over.py      # Tela game over
+│   │   ├── hangar.py         # Interface do hangar
+│   │   ├── evolution_menu.py # Menu evolução de nave
+│   │   └── achievements_hall.py # Hall de conquistas
+│   │
+│   ├── states/               # Estados do jogo
+│   │   ├── game_state.py     # Estado de gameplay
+│   │   ├── menu_state.py     # Estado de menu
+│   │   ├── pause_state.py    # Estado de pausa
+│   │   └── game_over_state.py # Estado game over
+│   │
+│   ├── background/           # Sistema de backgrounds
+│   │   ├── atmosphere.py     # Gerenciador de atmosferas
+│   │   ├── starfield.py      # Campo estelar
+│   │   └── parallax.py       # Layers parallax
+│   │
+│   └── utils/                # Utilitários
+│       ├── particles.py      # Sistema de partículas
+│       ├── animation.py      # Sistema de animação
+│       ├── math_utils.py     # Funções matemáticas
+│       └── debug.py          # Ferramentas de debug
+│
+└── data/                     # Dados persistentes
+    ├── saves/               # Save files
+    ├── config.json          # Configurações do player
+    ├── ships.json           # Dados de naves
+    ├── cards.json           # Dados de cartas
+    ├── enemies.json         # Dados de inimigos
+    ├── bosses.json          # Dados de bosses
+    ├── achievements.json    # Conquistas
+    └── leaderboard.json     # Scores locais
+
+
+SPRINT 0: Setup e Preparação
+Duração: 1 semana
+Status: INICIANDO 🚀
+
+OBJETIVOS DA SPRINT 0
+✅ Configurar ambiente de desenvolvimento
+✅ Criar estrutura de pastas do projeto
+✅ Configurar versionamento (Git)
+✅ Instalar dependências
+✅ Criar janela básica do Pygame
+✅ Documentação inicial
+
+PASSO A PASSO DETALHADO
+TAREFA 1: Configurar Ambiente Python
+1.1 Verificar/Instalar Python 3.10+
+
+# Verificar versão atual do Python
+python --version
+# ou
+python3 --version
+
+# Deve retornar: Python 3.10.x ou superior
+
+Se não tiver Python 3.10+:
+
+Windows: https://www.python.org/downloads/
+Linux: sudo apt install python3.10 (Ubuntu/Debian)
+Mac: brew install python@3.10
+
+1.2 Criar Ambiente Virtual
+
+# Navegar para onde quer criar o projeto
+cd ~/Documents/Projetos  # ou seu diretório preferido
+
+# Criar pasta do projeto
+mkdir plane_free
+cd plane_free
+
+# Criar ambiente virtual
+python -m venv venv
+
+# Ativar ambiente virtual
+# Windows:
+venv\Scripts\activate
+
+# Linux/Mac:
+source venv/bin/activate
+
+# Verificar que está ativado (deve aparecer (venv) no prompt)
+
