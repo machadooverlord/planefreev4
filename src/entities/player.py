@@ -171,6 +171,35 @@ class Player:
     def shoot(self):
         """Registra que atirou (reseta timer)"""
         self.fire_timer = self.fire_rate
+
+    def create_projectile(self, projectile_pool):
+        """
+        Cria projétil (se puder atirar)
+        
+        Args:
+            projectile_pool: Pool de projéteis
+            
+        Returns:
+            bool: True se atirou, False se não pode
+        """
+        if not self.can_shoot():
+            return False
+        
+        # Pegar projétil do pool
+        projectile = projectile_pool.get()
+        
+        # Spawnar na posição do player (um pouco acima)
+        projectile.spawn(
+            x=self.x,
+            y=self.y - 20,  # Acima do player
+            damage=self.damage,
+            owner='player'
+        )
+        
+        # Resetar timer
+        self.shoot()
+        
+        return True
     
     def take_damage(self, amount):
         """
