@@ -60,44 +60,33 @@ class Player:
         self.invincible_timer = 0
         self.invincible_duration = 1.5  # Segundos
         
-    def handle_input(self, keys):
+    def handle_input(self, move_x, move_y):
         """
         Processa input de movimento
         
         Args:
-            keys: pygame.key.get_pressed()
+            move_x (float): Movimento horizontal (-1 a 1)
+            move_y (float): Movimento vertical (-1 a 1)
+            
+        Returns:
+            tuple: (move_x, move_y) processados
         """
-        # Direções
-        moving_x = 0
-        moving_y = 0
-        
-        # Horizontal
-        if keys[pygame.K_a] or keys[pygame.K_LEFT]:
-            moving_x = -1
-        if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
-            moving_x = 1
-        
-        # Vertical
-        if keys[pygame.K_w] or keys[pygame.K_UP]:
-            moving_y = -1
-        if keys[pygame.K_s] or keys[pygame.K_DOWN]:
-            moving_y = 1
-        
-        return moving_x, moving_y
+        return move_x, move_y
     
-    def update(self, dt, keys):
+    def update(self, dt, move_x, move_y):
         """
         Atualiza o player
         
         Args:
             dt (float): Delta time em segundos
-            keys: pygame.key.get_pressed()
+            move_x (float): Movimento horizontal (-1 a 1)
+            move_y (float): Movimento vertical (-1 a 1)
         """
         if not self.alive:
             return
         
-        # Input
-        moving_x, moving_y = self.handle_input(keys)
+        # Input (já vem processado)
+        moving_x, moving_y = self.handle_input(move_x, move_y)
         
         # Movimento com aceleração
         if moving_x != 0:

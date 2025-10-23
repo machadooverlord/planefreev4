@@ -1,0 +1,98 @@
+{
+    "high_scores": [
+        {
+            "name": "DAS",
+            "score": 3955
+        },
+        {
+            "name": "EQW",
+            "score": 1410
+        },
+        {
+            "name": "WDS",
+            "score": 1410
+        },
+        {
+            "name": "TYF",
+            "score": 1410
+        },
+        {
+            "name": "WEA",
+            "score": 145
+        }
+    ],
+    "player_money": 0,
+    "upgrades": {
+        "speed": {
+            "level": 0,
+            "value_per_level": 0.05,
+            "current_value": 1.0
+        },
+        "shield_duration": {
+            "level": 0,
+            "value_per_level": 0.1,
+            "current_value": 1.0
+        },
+        "rapid_fire_duration": {
+            "level": 0,
+            "value_per_level": 0.1,
+            "current_value": 1.0
+        },
+        "double_points_duration": {
+            "level": 0,
+            "value_per_level": 0.1,
+            "current_value": 1.0
+        },
+        "invincibility_duration": {
+            "level": 0,
+            "value_per_level": 0.08,
+            "current_value": 1.0
+        },
+        "freeze_duration": {
+            "level": 0,
+            "value_per_level": 0.1,
+            "current_value": 1.0
+        },
+        "magnet_duration": {
+            "level": 0,
+            "value_per_level": 0.1,
+            "current_value": 1.0
+        },
+        "slow_motion_duration": {
+            "level": 0,
+            "value_per_level": 0.1,
+            "current_value": 1.0
+        },
+        "laser_beam_duration": {
+            "level": 0,
+            "value_per_level": 0.1,
+            "current_value": 1.0
+        },
+        "homing_missile_ammo": {
+            "level": 0,
+            "value_per_level": 2,
+            "current_value": 5
+        },
+        "spread_shot_duration": {
+            "level": 0,
+            "value_per_level": 0.1,
+            "current_value": 1.0
+        },
+        "bomb_damage": {
+            "level": 0,
+            "value_per_level": 0.15,
+            "current_value": 1.0
+        }
+    },
+    "hardcore_mode": true,
+    "selected_plane_index": 9,
+    "settings": {
+        "graphics_quality": "medium",
+        "fullscreen": true,
+        "resolution": [
+            1920,
+            1080
+        ],
+        "fps_limit": 60
+    }
+}

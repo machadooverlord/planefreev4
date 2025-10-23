@@ -1,0 +1,6 @@
+{
+    "hardcore_mode": true,
+    "settings": {
+        "fps_limit": 60
+    }
+}
