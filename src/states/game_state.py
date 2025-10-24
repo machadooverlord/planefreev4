@@ -29,9 +29,6 @@ class GameState:
         """
         self.screen = screen
         
-        # Clock para FPS
-        self.clock = pygame.time.Clock()
-        
         # Componentes
         self.background = Background()
         self.input_manager = InputManager()
@@ -45,6 +42,7 @@ class GameState:
         # Estado
         self.paused = False
         self.game_over = False
+        self.current_fps = 0
         
         print("✓ GameState inicializado")
     
@@ -86,15 +84,19 @@ class GameState:
                     self.background.starfield.set_density(new_count)
                     print(f"Star density: {new_count}")
     
-    def update(self, dt):
+    def update(self, dt, fps=0):
         """
         Atualiza o estado do jogo
         
         Args:
             dt (float): Delta time em segundos
+            fps (int): FPS atual
         """
         if self.paused or self.game_over:
             return
+        
+        # Guardar FPS para renderizar
+        self.current_fps = fps
         
         # Update input
         self.input_manager.update()
@@ -155,7 +157,7 @@ class GameState:
         
         # FPS (debug)
         if game_config.show_fps:
-            fps = int(self.clock.get_fps())
+            fps = int(self.current_fps)
             fps_text = font.render(f"FPS: {fps}", True, COLOR_WHITE)
             self.screen.blit(fps_text, (SCREEN_WIDTH - 120, 20))
         

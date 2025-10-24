@@ -82,7 +82,8 @@ class Game:
     
     def update(self):
         """Atualiza lógica do jogo"""
-        self.game_state.update(self.dt)
+        fps = self.clock.get_fps()
+        self.game_state.update(self.dt, fps)
     
     def render(self):
         """Renderiza o jogo na tela"""
