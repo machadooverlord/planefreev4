@@ -2,13 +2,14 @@
 Plane Free - Main Entry Point
 Um shoot 'em up roguelike espacial
 
-Sprint 0: Setup básico
+Sprint 1: Core Gameplay - Movimento, Tiro, Input, Background
 """
 
 import pygame
 import sys
 from constants import *
 from config import config
+from src.states.game_state import GameState
 
 
 class Game:
@@ -38,7 +39,10 @@ class Game:
         
         # Estado do jogo
         self.running = True
-        self.dt = 0  # Delta time
+        self.dt = 0
+        
+        # Estado de gameplay
+        self.game_state = GameState(self.screen)
         
         print(f"✓ {GAME_TITLE} inicializado!")
         print(f"✓ Pygame versão: {pygame.version.ver}")
@@ -47,67 +51,70 @@ class Game:
     
     def handle_events(self):
         """Processa eventos de input"""
-        for event in pygame.event.get():
+        events = pygame.event.get()
+        
+        for event in events:
             if event.type == pygame.QUIT:
                 self.running = False
             
-            # ESC para sair (temporário)
             if event.type == pygame.KEYDOWN:
+                # ESC para sair
                 if event.key == pygame.K_ESCAPE:
                     self.running = False
+                
+                # H para toggle hitbox (debug)
+                if event.key == pygame.K_h:
+                    config.show_hitboxes = not config.show_hitboxes
+                    print(f"Show Hitboxes: {config.show_hitboxes}")
+                
+                # F para toggle FPS
+                if event.key == pygame.K_f:
+                    config.show_fps = not config.show_fps
+                    print(f"Show FPS: {config.show_fps}")
+                
+                # K para kill player (teste game over)
+                if event.key == pygame.K_k:
+                    self.game_state.player.take_damage(999)
+                    print("Player killed (test)")
+        
+        # Passar eventos para o game state
+        self.game_state.handle_events(events)
     
     def update(self):
         """Atualiza lógica do jogo"""
-        # Por enquanto, nada para atualizar
-        pass
+        self.game_state.update(self.dt)
     
     def render(self):
         """Renderiza o jogo na tela"""
-        # Limpar tela (preto)
-        self.screen.fill(COLOR_BLACK)
-        
-        # Texto de teste
-        if config.debug_mode:
-            font = pygame.font.Font(None, 36)
-            
-            # Título
-            title_text = font.render(
-                f"{GAME_TITLE} - Sprint 0",
-                True,
-                COLOR_WHITE
-            )
-            title_rect = title_text.get_rect(
-                center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50)
-            )
-            self.screen.blit(title_text, title_rect)
-            
-            # Instruções
-            instruction_text = font.render(
-                "Pressione ESC para sair",
-                True,
-                COLOR_GRAY
-            )
-            instruction_rect = instruction_text.get_rect(
-                center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)
-            )
-            self.screen.blit(instruction_text, instruction_rect)
-            
-            # FPS
-            if config.show_fps:
-                fps = int(self.clock.get_fps())
-                fps_text = font.render(
-                    f"FPS: {fps}",
-                    True,
-                    COLOR_GREEN if fps >= 55 else COLOR_YELLOW
-                )
-                self.screen.blit(fps_text, (10, 10))
+        # GameState renderiza tudo
+        self.game_state.render()
         
         # Atualizar display
         pygame.display.flip()
     
     def run(self):
         """Loop principal do jogo"""
-        print("\n=== Iniciando loop principal ===\n")
+        print("\n" + "="*50)
+        print(f"  {GAME_TITLE} v{GAME_VERSION}")
+        print(f"  Sprint 1: Core Gameplay COMPLETO")
+        print("="*50)
+        print()
+        print("CONTROLES:")
+        print("  WASD/Setas/Analógico: Mover")
+        print("  Tiro: Automático")
+        print("  TAB: Pausar")
+        print()
+        print("DEBUG/TESTE:")
+        print("  1/2/3/4: Velocidade do Starfield (0.5x/1x/2x/3x)")
+        print("  -/+: Densidade de Estrelas (50-500)")
+        print("  H: Toggle Hitbox")
+        print("  F: Toggle FPS")
+        print("  K: Kill Player (testar Game Over)")
+        print()
+        print("  ESC: Sair")
+        print()
+        print("Iniciando loop principal...")
+        print()
         
         while self.running:
             # Delta time (em segundos)
@@ -127,19 +134,16 @@ class Game:
     
     def quit(self):
         """Encerra o jogo"""
-        print("\n=== Encerrando jogo ===")
+        print("\n" + "="*50)
+        print("  Encerrando Plane Free")
+        print("  Obrigado por jogar!")
+        print("="*50)
         pygame.quit()
         sys.exit()
 
 
 def main():
     """Função principal"""
-    print("="*50)
-    print(f"  {GAME_TITLE} v{GAME_VERSION}")
-    print("  Sprint 0: Setup e Preparação")
-    print("="*50)
-    print()
-    
     # Criar e executar jogo
     game = Game()
     game.run()
