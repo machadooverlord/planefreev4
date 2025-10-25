@@ -61,6 +61,17 @@ class Projectile:
         self.active = True
         self.time_alive = 0
         self.rect.center = (self.x, self.y)
+        
+        # ===== ADICIONE ESTAS LINHAS ===== ←
+        # Cor diferente para projéteis inimigos
+        if owner == 'enemy':
+            from src.utils.placeholder_generator import create_projectile_sprite
+            self.sprite = create_projectile_sprite(8, 8, COLOR_RED)  # Vermelho
+            self.width = 8
+            self.height = 8
+            self.rect = self.sprite.get_rect()
+            self.rect.center = (self.x, self.y)
+        # ===== FIM DAS ADIÇÕES =====
     
     def update(self, dt):
         """

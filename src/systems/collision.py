@@ -170,11 +170,17 @@ class CollisionSystem:
                     stats['projectiles_destroyed'] += 1
                     break  # Projétil só acerta 1 inimigo (por enquanto)
         
-        # 3. Projéteis de Inimigos vs Player (implementar depois com Range)
-        # for projectile in projectiles.in_use[:]:
-        #     if CollisionSystem.check_projectile_player_collision(projectile, player):
-        #         player.take_damage(projectile.damage)
-        #         projectile.deactivate()
-        #         stats['player_hit'] = True
+        # 3. Projéteis de Inimigos vs Player
+        for projectile in projectiles.in_use[:]:
+            if not projectile.active:
+                continue
+            
+            if CollisionSystem.check_projectile_player_collision(projectile, player):
+                # Player toma dano
+                player.take_damage(projectile.damage)
+                stats['player_hit'] = True
+                
+                # Projétil é destruído
+                projectile.deactivate()
         
         return stats

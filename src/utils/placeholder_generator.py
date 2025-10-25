@@ -39,11 +39,11 @@ def create_enemy_sprite(size=24, color=COLOR_RED):
     return surface
 
 
-def create_projectile_sprite(width=6, height=12):
+def create_projectile_sprite(width=6, height=12, color=COLOR_YELLOW):
     """Cria sprite placeholder de projétil (retângulo)"""
     surface = pygame.Surface((width, height), pygame.SRCALPHA)
     
-    pygame.draw.rect(surface, COLOR_YELLOW, (0, 0, width, height))
+    pygame.draw.rect(surface, color, (0, 0, width, height))
     
     return surface
 
