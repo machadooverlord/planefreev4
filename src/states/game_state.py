@@ -15,6 +15,7 @@ from src.entities.projectile import Projectile
 from src.systems.object_pool import ObjectPool
 from src.core.input_manager import InputManager
 from src.background.starfield import Background
+from src.systems.collision import CollisionSystem
 
 
 class GameState:
@@ -43,6 +44,12 @@ class GameState:
         self.paused = False
         self.game_over = False
         self.current_fps = 0
+
+        # Sistema de colisão
+        self.collision_system = CollisionSystem()
+        
+        # Inimigos (para testar colisão)
+        self.enemies = []
         
         print("✓ GameState inicializado")
     
@@ -115,6 +122,28 @@ class GameState:
         # Update projéteis
         self.projectile_pool.update_all(dt)
         
+        # Update inimigos
+        player_pos = (self.player.x, self.player.y) if self.player.alive else None
+        for enemy in self.enemies[:]:  # Cópia para evitar problemas
+            enemy.update(dt, player_pos)
+            
+            # Remover inimigos inativos
+            if not enemy.active:
+                self.enemies.remove(enemy)
+        
+        # Processar colisões
+        collision_stats = self.collision_system.process_collisions(
+            self.player,
+            self.enemies,
+            self.projectile_pool
+        )
+        
+        # Feedback de colisão (debug)
+        if collision_stats['player_hit']:
+            print(f"⚠️ Player hit! HP: {self.player.hp}/{self.player.max_hp}")
+        if collision_stats['enemies_hit'] > 0:
+            print(f"💥 {collision_stats['enemies_hit']} enemies hit!")
+        
         # Check game over
         if not self.player.alive and not self.game_over:
             self.game_over = True
@@ -130,6 +159,10 @@ class GameState:
         
         # Player
         self.player.render(self.screen)
+        
+        # Inimigos
+        for enemy in self.enemies:
+            enemy.render(self.screen)
         
         # HUD (simples por enquanto)
         self.render_hud()
