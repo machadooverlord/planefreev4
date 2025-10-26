@@ -1,60 +1,42 @@
-# Plane Free
+# Plane Free v4
 
-Um shoot 'em up roguelike espacial onde você evolui sua nave através das camadas da atmosfera até o espaço profundo.
+Shoot 'em up espacial roguelike com sistema de cartas e evolução de naves.
 
-## Status do Desenvolvimento
-
-**Versão Atual:** 0.0.1-alpha  
-**Sprint Atual:** Sprint 0 - Setup e Preparação
-
-## Requisitos
-
-- Python 3.10+
-- Pygame 2.5+
-
-## Instalação
+## 🎮 Como Rodar
 ```bash
 # Clonar repositório
-git clone https://github.com/seu_usuario/plane_free.git
-cd plane_free
-
-# Criar ambiente virtual
-python -m venv venv
-
-# Ativar ambiente virtual
-# Windows:
-venv\Scripts\activate
-# Linux/Mac:
-source venv/bin/activate
+git clone https://github.com/machadooverlord/planefreev4.git
+cd planefreev4
 
 # Instalar dependências
 pip install -r requirements.txt
+
+# Rodar jogo
+python src/main.py
 ```
 
-## Como Executar
-```bash
-# Com ambiente virtual ativado
-python main.py
-```
+## 📋 Status do Desenvolvimento
 
-## Controles (Atual)
+- [x] Sprint 0: Setup (90% completo)
+- [ ] Sprint 1: Movimento Básico (próximo)
 
-- **ESC:** Sair do jogo
+## 🛠️ Tecnologias
 
-## Roadmap
+- Python 3.10+
+- Pygame 2.5+
+- Numpy
 
-- [x] Sprint 0: Setup e Preparação
-- [ ] Sprint 1: Movimento e Tiro
-- [ ] Sprint 2: Inimigos e Colisão
-- [ ] Sprint 3: Recursos e HUD
-- [ ] ... (ver GDD completo)
+## 📚 Documentação
+
+Ver `docs/GDD_v3.0.md` para detalhes completos do design.
 
 ## Créditos
 
-**Desenvolvedor:** [Seu Nome]  
+**Desenvolvedor:** Luciano Henrique Machado Copati  
 **Engine:** Pygame  
 **Inspirações:** Enter the Gungeon, Vampire Survivors, FTL
 
-## Licença
+## 📝 Licença
 
-[Definir depois]
+[Escolher licença - MIT sugerida]
+```
