@@ -70,6 +70,13 @@ def main():
                     enemies.append(r)
                     print("Range spawnado: AI Level 1 (Mira no player)")
                 
+                if event.key == pygame.K_3:
+                    r = EnemyRange()
+                    r.set_ai_level(2)
+                    r.spawn(SCREEN_WIDTH // 2, -50)
+                    enemies.append(r)
+                    print("Range spawnado: AI Level 2 (Atira descendo/parado/saindo)")
+                
                 # K para matar todos
                 if event.key == pygame.K_k:
                     for e in enemies:
@@ -164,8 +171,9 @@ def main():
             f"FPS: {int(clock.get_fps())}",
             "",
             "WASD: Mover",
-            "1: Spawn Range AI Lv0 (reto)",
+            "1: Spawn Range AI Lv0 (só para)",
             "2: Spawn Range AI Lv1 (mira)",
+            "3: Spawn Range AI Lv2 (atira sempre)",  # ✅ NOVO
             "K: Matar todos",
             "H: Toggle Hitbox",
             "ESC: Sair"

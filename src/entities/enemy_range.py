@@ -37,9 +37,11 @@ class EnemyRange(Enemy):
         self.fire_timer = 0
         self.can_shoot = False
         
-        # Movimento vertical
+        # ✅ NOVO: Movimento vertical em 3 fases
         self.stop_y = SCREEN_HEIGHT * 0.3  # Para em 30% da tela
-        self.has_stopped = False
+        self.phase = 'descending'  # 'descending' → 'stopped' → 'leaving'
+        self.stopped_timer = 0
+        self.stopped_duration = 8.0  # ✅ Fica parado por 8 segundos
         
         # IA
         self.ai_level = 0
@@ -54,7 +56,8 @@ class EnemyRange(Enemy):
         """
         super().spawn(x, y)
         self.fire_timer = self.fire_rate  # Começa pronto para atirar
-        self.has_stopped = False
+        self.phase = 'descending'
+        self.stopped_timer = 0
         self.can_shoot = False
     
     def update(self, dt, player_pos=None):
@@ -68,29 +71,71 @@ class EnemyRange(Enemy):
         if not self.active or not self.alive:
             return
         
-        # Movimento vertical (desce até stop_y, depois para)
-        if not self.has_stopped:
-            if self.y < self.stop_y:
-                self.vy = self.speed
-            else:
-                self.vy = 0
-                self.has_stopped = True
+        # Sistema de fases
+        if self.phase == 'descending':
+            # FASE 1: Descendo até stop_y
+            self.vy = self.speed
+            self.vx = 0
+            
+            # ✅ AI Level 2+: Pode atirar mesmo descendo (mas raramente)
+            if self.ai_level >= 2:
                 self.can_shoot = True
-        else:
+                # Aumenta fire rate (atira menos frequente)
+                if self.fire_timer <= 0:
+                    self.fire_rate = 4.0  # 1 tiro a cada 4s (metade da frequência)
+            else:
+                self.can_shoot = False
+            
+            if self.y >= self.stop_y:
+                # Chegou no ponto de parada
+                self.phase = 'stopped'
+                self.stopped_timer = 0
+                self.can_shoot = True
+                self.fire_rate = 2.0  # Volta ao normal
+                print(f"Range {id(self)} PAROU em Y={self.y:.0f}")
+        
+        elif self.phase == 'stopped':
+            # FASE 2: Parado atirando
+            self.vy = 0
+            
             # Movimento lateral leve (patrol)
             if self.ai_level >= 1:
                 import math
-                # Movimento senoidal suave
                 self.vx = math.sin(pygame.time.get_ticks() * 0.001) * 30
             else:
                 self.vx = 0
+            
+            self.can_shoot = True
+            self.fire_rate = 2.0  # Fire rate normal (1 tiro / 2s)
+            
+            # Contar tempo parado
+            self.stopped_timer += dt
+            
+            if self.stopped_timer >= self.stopped_duration:
+                # Acabou o tempo, começar a descer
+                self.phase = 'leaving'
+                print(f"Range {id(self)} voltou a DESCER")
         
+        elif self.phase == 'leaving':
+            # FASE 3: Descendo até sair da tela
+            self.vy = self.speed
+            self.vx = 0
+            
+            # ✅ AI Level 2+: Continua atirando em retirada (menos frequente)
+            if self.ai_level >= 2:
+                self.can_shoot = True
+                self.fire_rate = 5.0  # 1 tiro a cada 5s (bem raro)
+            else:
+                self.can_shoot = False
+    
         # Aplicar movimento
         super().update(dt, player_pos)
         
         # Fire rate timer
         if self.fire_timer > 0:
             self.fire_timer -= dt
+        else:
+            self.fire_timer = 0
     
     def can_fire(self):
         """
@@ -99,7 +144,13 @@ class EnemyRange(Enemy):
         Returns:
             bool: True se pode atirar
         """
-        return self.can_shoot and self.fire_timer <= 0 and self.alive and self.active
+        return (
+            self.can_shoot and 
+            self.fire_timer <= 0 and 
+            self.alive and 
+            self.active and
+            self.phase == 'stopped'  # ✅ Só atira quando parado
+        )
     
     def shoot(self, projectile_pool, player_pos=None):
         """

@@ -28,8 +28,10 @@ class Projectile:
         # Stats
         self.damage = 10
         
-        # Sprite
-        self.sprite = create_projectile_sprite(6, 12)
+        # Sprites (criados uma vez)
+        self.sprite_player = create_projectile_sprite(6, 12, COLOR_YELLOW)
+        self.sprite_enemy = create_projectile_sprite(8, 8, COLOR_RED)
+        self.sprite = self.sprite_player  # Padrão
         self.rect = self.sprite.get_rect()
         
         # Hitbox
@@ -60,18 +62,30 @@ class Projectile:
         self.owner = owner
         self.active = True
         self.time_alive = 0
-        self.rect.center = (self.x, self.y)
         
-        # ===== ADICIONE ESTAS LINHAS ===== ←
-        # Cor diferente para projéteis inimigos
-        if owner == 'enemy':
-            from src.utils.placeholder_generator import create_projectile_sprite
-            self.sprite = create_projectile_sprite(8, 8, COLOR_RED)  # Vermelho
+        # ✅ CONFIGURAR VELOCIDADE BASEADO NO OWNER
+        if owner == 'player':
+            # Projéteis do player: PARA CIMA
+            self.vx = 0
+            self.vy = -600  # ✅ NEGATIVO = para cima
+            
+            # Configurar sprite
+            self.sprite = self.sprite_player
+            self.width = 6
+            self.height = 12
+            self.rect = self.sprite.get_rect()
+        
+        else:  # enemy
+            # Projéteis inimigos: Velocidade será setada por quem chamou
+            # (já vem configurado pelo enemy_range.shoot())
+            
+            # Configurar sprite
+            self.sprite = self.sprite_enemy
             self.width = 8
             self.height = 8
             self.rect = self.sprite.get_rect()
-            self.rect.center = (self.x, self.y)
-        # ===== FIM DAS ADIÇÕES =====
+        
+        self.rect.center = (self.x, self.y)
     
     def update(self, dt):
         """
@@ -104,6 +118,7 @@ class Projectile:
     def deactivate(self):
         """Desativa o projétil (retorna ao pool)"""
         self.active = False
+        # ✅ NÃO resetar sprite aqui - será feito no próximo spawn()
     
     def render(self, screen):
         """
@@ -122,7 +137,7 @@ class Projectile:
         if config.debug_mode and config.show_hitboxes:
             pygame.draw.rect(
                 screen,
-                COLOR_YELLOW,
+                COLOR_YELLOW if self.owner == 'player' else COLOR_RED,
                 self.rect,
                 1
             )

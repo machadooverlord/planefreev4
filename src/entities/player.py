@@ -152,6 +152,8 @@ class Player:
         # Fire rate timer
         if self.fire_timer > 0:
             self.fire_timer -= dt
+        else:
+            self.fire_timer = 0
     
     def can_shoot(self):
         """Verifica se pode atirar"""
@@ -177,10 +179,15 @@ class Player:
         # Pegar projétil do pool
         projectile = projectile_pool.get()
         
-        # Spawnar na posição do player (um pouco acima)
+        # ✅ CORREÇÃO GARANTIDA: Spawnar no NARIZ
+        # Sprite do player = 32px altura
+        # Triângulo aponta para CIMA (Y negativo)
+        # Centro do sprite está em self.y
+        # Nariz está 16 pixels ACIMA (y - 16)
+        
         projectile.spawn(
             x=self.x,
-            y=self.y - 20,  # Acima do player
+            y=self.y - 16,  # ✅ Subtrair metade do sprite (32 / 2 = 16)
             damage=self.damage,
             owner='player'
         )
@@ -229,15 +236,35 @@ class Player:
         
         # Efeito de piscar quando invencível
         if self.invincible:
-            # Pisca a cada 0.1s
             if int(self.invincible_timer * 10) % 2 == 0:
-                return  # Não renderiza (pisca)
+                return
         
         # Renderizar sprite
         screen.blit(self.sprite, self.rect)
         
-        # Debug: Hitbox (se debug ativo)
+        # ✅ DEBUG: Mostrar onde projétil spawna
         from config import config
+        if config.debug_mode:
+            # Ponto de spawn do projétil (nariz)
+            spawn_y = self.y - 16
+            pygame.draw.circle(
+                screen,
+                (255, 0, 255),  # Rosa/Magenta
+                (int(self.x), int(spawn_y)),
+                4,  # Raio
+                0   # Preenchido
+            )
+            
+            # Linha do centro do player
+            pygame.draw.line(
+                screen,
+                (0, 255, 255),  # Ciano
+                (int(self.x) - 10, int(self.y)),
+                (int(self.x) + 10, int(self.y)),
+                2
+            )
+        
+        # Hitbox
         if config.debug_mode and config.show_hitboxes:
             pygame.draw.circle(
                 screen,
