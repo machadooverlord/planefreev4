@@ -15,6 +15,7 @@ COLOR_GREEN = (0, 255, 0)
 COLOR_BLUE = (0, 100, 255)
 COLOR_YELLOW = (255, 255, 0)
 COLOR_GRAY = (128, 128, 128)
+COLOR_CYAN = (0, 255, 255)
 
 # Área jogável (com margem)
 PLAY_AREA_MARGIN = 50

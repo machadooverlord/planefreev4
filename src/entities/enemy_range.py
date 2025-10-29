@@ -25,7 +25,8 @@ class EnemyRange(Enemy):
         self.hp = 45
         self.speed = 60  # Mais lento que Kamikaze
         self.damage = 10  # Dano do projétil
-        self.value = 17  # 15-20 minérios (média)
+        self.value = 20
+        self.shoot_range = 400
         
         # Visual (azul para diferenciar)
         self.size = 32  # Maior que Kamikaze
@@ -95,18 +96,15 @@ class EnemyRange(Enemy):
                 print(f"Range {id(self)} PAROU em Y={self.y:.0f}")
         
         elif self.phase == 'stopped':
-            # FASE 2: Parado atirando
+            # FASE 2: Parado atirando MAS com movimento lateral
             self.vy = 0
             
-            # Movimento lateral leve (patrol)
-            if self.ai_level >= 1:
-                import math
-                self.vx = math.sin(pygame.time.get_ticks() * 0.001) * 30
-            else:
-                self.vx = 0
+            # Movimento lateral SEMPRE (não apenas AI 1+)
+            import math
+            self.vx = math.sin(pygame.time.get_ticks() * 0.002) * 40  # Patrol constante
             
             self.can_shoot = True
-            self.fire_rate = 2.0  # Fire rate normal (1 tiro / 2s)
+            self.fire_rate = 2.0
             
             # Contar tempo parado
             self.stopped_timer += dt
@@ -153,18 +151,21 @@ class EnemyRange(Enemy):
         )
     
     def shoot(self, projectile_pool, player_pos=None):
-        """
-        Atira um projétil
-        
-        Args:
-            projectile_pool: Pool de projéteis
-            player_pos (tuple): Posição do player para mirar
-            
-        Returns:
-            bool: True se atirou
-        """
         if not self.can_fire():
             return False
+        
+        # Verificar se player está no alcance
+        if player_pos:
+            import math
+            dx = player_pos[0] - self.x
+            dy = player_pos[1] - self.y
+            distance = math.sqrt(dx*dx + dy*dy)
+            
+            # Alcance aumenta com AI level
+            effective_range = self.shoot_range + (self.ai_level * 100)
+            
+            if distance > effective_range:
+                return False
         
         # Pegar projétil do pool
         projectile = projectile_pool.get()

@@ -25,7 +25,7 @@ class EnemyKamikaze(Enemy):
         self.hp = 30
         self.speed = 150  # Mais rápido que a base
         self.damage = 20
-        self.value = 12  # 10-15 minérios (média)
+        self.value = 10
         
         # Visual
         self.size = 24
@@ -48,9 +48,22 @@ class EnemyKamikaze(Enemy):
         
         # Comportamento baseado no AI level
         if self.ai_level == 0:
-            # Nível 0: Desce reto
-            self.vx = 0
+            # Nível 0: Desce mas com LEVE correção para o player
             self.vy = self.speed
+            
+            if player_pos:
+                player_x, player_y = player_pos
+                
+                # Correção MUITO LEVE (10% da velocidade)
+                if abs(self.x - player_x) > 20:
+                    if self.x < player_x:
+                        self.vx = self.speed * 0.1
+                    else:
+                        self.vx = -self.speed * 0.1
+                else:
+                    self.vx = 0
+            else:
+                self.vx = 0
         
         elif self.ai_level == 1 and player_pos:
             # Nível 1: Leve correção lateral em direção ao player

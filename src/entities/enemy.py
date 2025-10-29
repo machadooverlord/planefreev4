@@ -54,24 +54,22 @@ class Enemy:
         # Estado
         self.active = False
         self.alive = True
+
+        # Controle de drop
+        self.has_dropped = False
         
         # Mutação (para implementar depois)
         self.is_mutated = False
     
     def spawn(self, x, y):
-        """
-        Ativa o inimigo em uma posição
-        
-        Args:
-            x (float): Posição X
-            y (float): Posição Y
-        """
+        """Ativa o inimigo"""
         self.x = x
         self.y = y
         self.active = True
         self.alive = True
         self.hp = self.max_hp
         self.rect.center = (self.x, self.y)
+        self.has_dropped = False  # ✅ Resetar flag
     
     def update(self, dt, player_pos=None):
         """
@@ -98,15 +96,7 @@ class Enemy:
             self.deactivate()
     
     def take_damage(self, amount):
-        """
-        Recebe dano
-        
-        Args:
-            amount (int): Quantidade de dano
-            
-        Returns:
-            bool: True se morreu, False se ainda vivo
-        """
+        """Recebe dano"""
         if not self.alive:
             return False
         
@@ -115,18 +105,15 @@ class Enemy:
         if self.hp <= 0:
             self.hp = 0
             self.die()
-            return True
+            return True  # ✅ Retorna True quando morre
         
         return False
     
     def die(self):
         """Inimigo morre"""
         self.alive = False
-        self.deactivate()  # Desativa para retornar ao pool
-        print(f"Enemy {id(self)} morreu!")  # Debug
-        # TODO: Spawn explosão
-        # TODO: Drop minérios
-        # TODO: Som de morte
+        self.hp = 0
+        print(f"☠️ Enemy {self.enemy_type} morreu em ({self.x:.0f}, {self.y:.0f})")
     
     def deactivate(self):
         """Desativa o inimigo (retorna ao pool)"""

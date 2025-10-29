@@ -59,6 +59,11 @@ class Player:
         self.invincible = False
         self.invincible_timer = 0
         self.invincible_duration = 1.5  # Segundos
+
+        # Regeneração de vida
+        self.regen_rate = 0.5  # HP por segundo (será modificado por classe)
+        self.regen_timer = 0
+        self.regen_interval = 1.0  # Regenera a cada 1 segundo
         
     def handle_input(self, move_x, move_y):
         """
@@ -142,6 +147,24 @@ class Player:
         
         # Atualizar rect
         self.rect.center = (self.x, self.y)
+
+        # ✅ NOVO: Regeneração de vida
+        if self.hp < self.max_hp:
+            self.regen_timer += dt
+            
+            if self.regen_timer >= self.regen_interval:
+                self.regen_timer = 0
+                
+                # Regenerar
+                self.hp += self.regen_rate
+                
+                # Não ultrapassar máximo
+                if self.hp > self.max_hp:
+                    self.hp = self.max_hp
+                
+                # Debug (apenas quando regenera)
+                if int(self.hp) % 5 == 0:  # A cada 5 HP
+                    print(f"♥️ Regenerou! HP: {int(self.hp)}/{self.max_hp}")
         
         # Invencibilidade
         if self.invincible:
@@ -223,6 +246,22 @@ class Player:
         """Player morre"""
         self.alive = False
         print("Player morreu!")
+
+    def set_ship_class(self, ship_class):
+        """
+        Define classe da nave (afeta regeneração)
+        
+        Args:
+            ship_class (str): 'tanque', 'velocista', 'tecnico'
+        """
+        if ship_class == 'tanque':
+            self.regen_rate = 1.0  # 1 HP/s (mais rápido)
+        elif ship_class == 'velocista':
+            self.regen_rate = 0.3  # 0.3 HP/s (mais lento)
+        elif ship_class == 'tecnico':
+            self.regen_rate = 0.5  # 0.5 HP/s (balanceado)
+        
+        print(f"✨ Classe: {ship_class} | Regen: {self.regen_rate} HP/s")
     
     def render(self, screen):
         """
