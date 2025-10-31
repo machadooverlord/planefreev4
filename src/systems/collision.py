@@ -131,11 +131,7 @@ class CollisionSystem:
             projectiles: ObjectPool de projéteis
             
         Returns:
-            dict: Estatísticas de colisões {
-                'player_hit': bool,
-                'enemies_hit': int,
-                'projectiles_destroyed': int
-            }
+            dict: Estatísticas de colisões
         """
         stats = {
             'player_hit': False,
@@ -151,24 +147,34 @@ class CollisionSystem:
                     stats['player_hit'] = True
                 
                 # Inimigo morre (kamikaze)
-                enemy.take_damage(9999)  # Kamikaze morre ao colidir
+                enemy.take_damage(9999)
                 stats['enemies_hit'] += 1
         
         # 2. Projéteis do Player vs Inimigos
-        for projectile in projectiles.in_use[:]:  # Cópia para evitar problemas
-            if not projectile.active:
+        # ✅ NOVO: Implementar PIERCE corretamente
+        for projectile in projectiles.in_use[:]:
+            if not projectile.active or projectile.owner != 'player':
                 continue
             
+            # Contador de hits deste projétil neste frame
+            hits_this_frame = 0
+            max_hits = 1 + player.pierce  # 1 hit base + pierce adicional
+            
             for enemy in enemies:
+                if hits_this_frame >= max_hits:
+                    break  # Já atingiu o máximo
+                
                 if CollisionSystem.check_projectile_enemy_collision(projectile, enemy):
                     # Inimigo toma dano
                     enemy.take_damage(projectile.damage)
                     stats['enemies_hit'] += 1
+                    hits_this_frame += 1
                     
-                    # Projétil é destruído
-                    projectile.deactivate()
-                    stats['projectiles_destroyed'] += 1
-                    break  # Projétil só acerta 1 inimigo (por enquanto)
+                    # Se atingiu máximo, destruir projétil
+                    if hits_this_frame >= max_hits:
+                        projectile.deactivate()
+                        stats['projectiles_destroyed'] += 1
+                        break
         
         # 3. Projéteis de Inimigos vs Player
         for projectile in projectiles.in_use[:]:

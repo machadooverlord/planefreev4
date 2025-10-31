@@ -64,6 +64,19 @@ class Player:
         self.regen_rate = 0.5  # HP por segundo (será modificado por classe)
         self.regen_timer = 0
         self.regen_interval = 1.0  # Regenera a cada 1 segundo
+
+        # Sistema de cartas
+        self.equipped_cards = []  # Lista de Card objects
+        self.max_card_slots = 3   # Máximo de cartas equipadas
+        
+        # Stats modificáveis por cartas
+        self.pierce = 0  # Quantos inimigos projétil atravessa
+        self.projectile_count = 1  # Quantos projéteis atira
+        self.lifesteal = 0.0  # % de dano que vira HP
+        self.shield = 0  # Bloqueia hits
+        self.shield_timer = 0
+        self.shield_cooldown = 10.0
+        self.explosion_radius = 0  # Raio de explosão dos projéteis
         
     def handle_input(self, move_x, move_y):
         """
@@ -148,7 +161,7 @@ class Player:
         # Atualizar rect
         self.rect.center = (self.x, self.y)
 
-        # ✅ NOVO: Regeneração de vida
+        # Regeneração de vida
         if self.hp < self.max_hp:
             self.regen_timer += dt
             
@@ -202,7 +215,7 @@ class Player:
         # Pegar projétil do pool
         projectile = projectile_pool.get()
         
-        # ✅ CORREÇÃO GARANTIDA: Spawnar no NARIZ
+        # Spawnar no NARIZ
         # Sprite do player = 32px altura
         # Triângulo aponta para CIMA (Y negativo)
         # Centro do sprite está em self.y
@@ -210,7 +223,7 @@ class Player:
         
         projectile.spawn(
             x=self.x,
-            y=self.y - 16,  # ✅ Subtrair metade do sprite (32 / 2 = 16)
+            y=self.y - 16,  # Subtrair metade do sprite (32 / 2 = 16)
             damage=self.damage,
             owner='player'
         )
@@ -281,7 +294,7 @@ class Player:
         # Renderizar sprite
         screen.blit(self.sprite, self.rect)
         
-        # ✅ DEBUG: Mostrar onde projétil spawna
+        # DEBUG: Mostrar onde projétil spawna
         from config import config
         if config.debug_mode:
             # Ponto de spawn do projétil (nariz)
@@ -312,3 +325,43 @@ class Player:
                 self.hitbox_radius,
                 1
             )
+    
+    def equip_card(self, card):
+        """
+        Equipa uma carta
+        
+        Args:
+            card (Card): Carta a equipar
+            
+        Returns:
+            bool: True se equipou
+        """
+        if len(self.equipped_cards) >= self.max_card_slots:
+            print(f"❌ Slots cheios! ({len(self.equipped_cards)}/{self.max_card_slots})")
+            return False
+        
+        # Aplicar efeito
+        card.apply_effect(self)
+        
+        # Adicionar à lista
+        self.equipped_cards.append(card)
+        
+        print(f"✅ Carta equipada: {card.name} ({len(self.equipped_cards)}/{self.max_card_slots})")
+        
+        return True
+
+    def unequip_card(self, card):
+        """
+        Desequipa uma carta
+        
+        Args:
+            card (Card): Carta a desequipar
+        """
+        if card in self.equipped_cards:
+            # Remover efeito
+            card.remove_effect(self)
+            
+            # Remover da lista
+            self.equipped_cards.remove(card)
+            
+            print(f"❌ Carta removida: {card.name}")

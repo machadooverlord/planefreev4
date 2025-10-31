@@ -1,4 +1,124 @@
 {
-  "version": "1.0",
-  "cards": []
+  "cards": [
+    {
+      "id": "damage_boost",
+      "name": "Otimização de Mira",
+      "rarity": "comum",
+      "type": "passive",
+      "description": "Aumenta dano dos projéteis em +20%",
+      "effect": {
+        "stat": "projectile_damage",
+        "operation": "multiply",
+        "value": 1.20
+      }
+    },
+    {
+      "id": "fire_rate_boost",
+      "name": "Cadeia de Comandos",
+      "rarity": "comum",
+      "type": "passive",
+      "description": "Reduz intervalo entre tiros em -15%",
+      "effect": {
+        "stat": "fire_rate",
+        "operation": "multiply",
+        "value": 0.85
+      }
+    },
+    {
+      "id": "max_hp_boost",
+      "name": "Módulo de Blindagem",
+      "rarity": "comum",
+      "type": "passive",
+      "description": "Aumenta HP máximo em +15",
+      "effect": {
+        "stat": "max_hp",
+        "operation": "add",
+        "value": 15
+      }
+    },
+    {
+      "id": "speed_boost",
+      "name": "Propulsor de Salto",
+      "rarity": "comum",
+      "type": "passive",
+      "description": "Aumenta velocidade de movimento em +15%",
+      "effect": {
+        "stat": "speed",
+        "operation": "multiply",
+        "value": 1.15
+      }
+    },
+    {
+      "id": "regen_boost",
+      "name": "Célula de Reparo",
+      "rarity": "incomum",
+      "type": "passive",
+      "description": "Aumenta regeneração de HP em +0.5/s",
+      "effect": {
+        "stat": "regen_rate",
+        "operation": "add",
+        "value": 0.5
+      }
+    },
+    {
+      "id": "piercing_shots",
+      "name": "Munição Perfurante",
+      "rarity": "incomum",
+      "type": "passive",
+      "description": "Projéteis atravessam 1 inimigo",
+      "effect": {
+        "stat": "pierce",
+        "operation": "set",
+        "value": 1
+      }
+    },
+    {
+      "id": "double_shot",
+      "name": "Tiro Duplo",
+      "rarity": "incomum",
+      "type": "passive",
+      "description": "Atira 2 projéteis ao mesmo tempo",
+      "effect": {
+        "stat": "projectile_count",
+        "operation": "set",
+        "value": 2
+      }
+    },
+    {
+      "id": "lifesteal",
+      "name": "Sifão de Escudo",
+      "rarity": "epico",
+      "type": "passive",
+      "description": "5% do dano causado vira HP",
+      "effect": {
+        "stat": "lifesteal",
+        "operation": "set",
+        "value": 0.05
+      }
+    },
+    {
+      "id": "shield",
+      "name": "Escudo de Energia",
+      "rarity": "epico",
+      "type": "passive",
+      "description": "Bloqueia 1 hit a cada 10s",
+      "effect": {
+        "stat": "shield",
+        "operation": "set",
+        "value": 1
+      }
+    },
+    {
+      "id": "explosive_bullets",
+      "name": "Resíduo Explosivo",
+      "rarity": "epico",
+      "type": "passive",
+      "description": "Projéteis explodem ao acertar (raio 30px)",
+      "effect": {
+        "stat": "explosion_radius",
+        "operation": "set",
+        "value": 30
+      }
+    }
+  ]
 }

@@ -58,7 +58,6 @@ class WaveManager:
             r = EnemyRange()
             self.range_pool.append(r)
         
-        # ✅ NOVO: Pool de Mães
         for _ in range(10):
             m = EnemyMother()
             self.mother_pool.append(m)
@@ -82,6 +81,15 @@ class WaveManager:
         r = EnemyRange()
         self.range_pool.append(r)
         return r
+    
+    def get_mother(self):
+        """Pega Mãe do pool"""
+        for m in self.mother_pool:
+            if not m.active:
+                return m
+        m = EnemyMother()
+        self.mother_pool.append(m)
+        return m
     
     def start_sector(self):
         """Inicia novo setor"""
@@ -137,15 +145,6 @@ class WaveManager:
             if len(active_enemies) == 0:
                 self._complete_sector()
     
-    def get_mother(self):
-        """Pega Mãe do pool"""
-        for m in self.mother_pool:
-            if not m.active:
-                return m
-        m = EnemyMother()
-        self.mother_pool.append(m)
-        return m
-    
     def _spawn_batch(self):
         """Spawna grupo de inimigos"""
         remaining = self.enemies_to_spawn - self.enemies_spawned
@@ -172,7 +171,6 @@ class WaveManager:
                 enemy.spawn(x, y)
                 self._apply_sector_stats(enemy)
             
-            # ✅ NOVO: Mother
             elif enemy_type == 'mother':
                 enemy = self.get_mother()
                 ai_level = self._get_ai_level()
@@ -186,30 +184,38 @@ class WaveManager:
             print(f"  📍 Spawned: {self.enemies_spawned}/{self.enemies_to_spawn}")
     
     def _apply_sector_stats(self, enemy):
-        """Aplica stats baseados no setor atual"""
-        # ✅ Escalada mais suave
-        hp_mult = 1 + (self.current_sector * 0.10)  # Era 0.15
-        speed_mult = 1 + (self.current_sector * 0.05)  # Era 0.08
-        damage_mult = 1 + (self.current_sector * 0.08)  # Era 0.10
+        """
+        Aplica stats baseados no setor atual
+        ✅ CORRIGIDO: Escalada MUITO mais suave
+        """
+        # ✅ NOVO: Escalada MUITO mais suave (3-4% por setor)
+        hp_mult = 1 + (self.current_sector * 0.03)      # Era 0.10 → Agora 3%
+        speed_mult = 1 + (self.current_sector * 0.02)   # Era 0.05 → Agora 2%
+        damage_mult = 1 + (self.current_sector * 0.04)  # Era 0.08 → Agora 4%
         
-        # Caps para evitar valores absurdos
-        hp_mult = min(hp_mult, 3.0)  # Max 3x HP
-        speed_mult = min(speed_mult, 2.0)  # Max 2x velocidade
-        damage_mult = min(damage_mult, 2.5)  # Max 2.5x dano
+        # Caps mais altos (já que escalada é mais lenta)
+        hp_mult = min(hp_mult, 4.0)      # Max 4x HP (era 3x)
+        speed_mult = min(speed_mult, 1.5)  # Max 1.5x velocidade (era 2x)
+        damage_mult = min(damage_mult, 3.0)  # Max 3x dano (era 2.5x)
         
         # Aplicar
         enemy.max_hp = int(enemy.max_hp * hp_mult)
         enemy.hp = enemy.max_hp
-        enemy.speed = int(enemy.speed * speed_mult)
+        
+        # ✅ KAMIKAZE: Velocidade SEMPRE constante
+        if enemy.enemy_type != 'kamikaze':
+            enemy.speed = int(enemy.speed * speed_mult)
+        # Kamikaze mantém velocidade base (150)
+        
         enemy.damage = int(enemy.damage * damage_mult)
         
-        # Value baseado no tipo
+        # Value sempre fixo
         if enemy.enemy_type == 'kamikaze':
-            enemy.value = 10  # ✅ Sempre 10 (1 minério)
+            enemy.value = 10
         elif enemy.enemy_type == 'range':
-            enemy.value = 20  # ✅ Sempre 20 (2 minérios)
+            enemy.value = 20
         elif enemy.enemy_type == 'mother':
-            enemy.value = 50  # ✅ Sempre 50 (5 minérios)
+            enemy.value = 50
     
     def _choose_enemy_type(self):
         """Escolhe tipo de inimigo"""
@@ -218,7 +224,7 @@ class WaveManager:
         elif self.current_sector == 2:
             return 'kamikaze' if random.random() < 0.80 else 'range'
         elif self.current_sector >= 3:
-            # ✅ 65% Kamikaze, 32% Range, 3% Mother
+            # 65% Kamikaze, 32% Range, 3% Mother
             rand = random.random()
             if rand < 0.65:
                 return 'kamikaze'
@@ -243,7 +249,6 @@ class WaveManager:
         if not self._is_boss_sector() and random.random() < self.miniboss_chance:
             print("⚠️ MINIBOSS APARECENDO!")
             self.miniboss_active = True
-            # TODO: Spawnar miniboss
         
         # Próximo setor
         self.current_sector += 1
@@ -251,7 +256,6 @@ class WaveManager:
         # Boss a cada 7 setores
         if self._is_boss_sector():
             print(f"💀 BOSS NO SETOR {self.current_sector}!")
-            # TODO: Spawnar boss
         
         # Countdown
         self.sector_countdown = self.sector_countdown_duration

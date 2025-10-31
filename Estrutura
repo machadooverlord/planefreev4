@@ -33,6 +33,7 @@ plane_free/
 │   │   ├── enemy.py           # Classe Enemy (base)
 │   │   ├── boss.py            # Classe Boss
 │   │   ├── projectile.py      # Projéteis
+│   │   ├── card_drop.py       # Cartas
 │   │   └── collectible.py     # Minérios, cartas
 │   │
 │   ├── systems/               # Sistemas de gameplay
@@ -47,6 +48,7 @@ plane_free/
 │   ├── ui/                    # Interfaces
 │   │   ├── hud.py            # HUD durante jogo
 │   │   ├── menu.py           # Menu principal
+|   |   ├── card_menu.py      # Menu de cartas
 │   │   ├── pause_menu.py     # Menu de pausa
 │   │   ├── game_over.py      # Tela game over
 │   │   ├── hangar.py         # Interface do hangar
